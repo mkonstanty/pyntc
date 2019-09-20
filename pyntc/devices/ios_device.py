@@ -204,6 +204,7 @@ class IOSDevice(BaseDevice):
         return self._facts
 
     def file_copy(self, src, dest=None, file_system=None):
+        # TODO: migrate file_copy to use a context handler
         self._enable()
         if file_system is None:
             file_system = self._get_file_system()
@@ -220,7 +221,10 @@ class IOSDevice(BaseDevice):
             except:
                 raise FileTransferError
             finally:
-                fc.close_scp_chan()
+                try:
+                    fc.close_scp_chan()
+                except AttributeError:
+                    pass
 
             if not self.file_copy_remote_exists(src, dest, file_system):
                 raise FileTransferError(
