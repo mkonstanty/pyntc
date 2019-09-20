@@ -214,18 +214,9 @@ class IOSDevice(BaseDevice):
             #        if not self.fc.verify_space_available():
             #            raise FileTransferError('Not enough space available.')
 
-            try:
-                fc.enable_scp()
-                fc.establish_scp_conn()
-                fc.transfer_file()
-            except:
-                raise FileTransferError
-            finally:
-                try:
-                    fc.close_scp_chan()
-                except AttributeError:
-                    pass
-
+            fc.enable_scp()
+            fc.establish_scp_conn()
+            fc.transfer_file()
             if not self.file_copy_remote_exists(src, dest, file_system):
                 raise FileTransferError(
                     message="Attempted file copy, but could not validate file existed after transfer"
