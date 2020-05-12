@@ -209,9 +209,8 @@ class IOSDevice(BaseDevice):
     def file_copy(self, src, dest=None, file_system='flash:'):
             fc = self._file_copy_instance(src, dest, file_system=file_system)
             self._enable()
-            #        if not self.fc.verify_space_available():
-            #            raise FileTransferError('Not enough space available.')
-
+            if not fc.verify_space_available():
+                raise FileTransferError('Not enough space available.')
             try:
                 fc.enable_scp()
                 fc.establish_scp_conn()
@@ -252,6 +251,7 @@ class IOSDevice(BaseDevice):
                 boot_image = match.group(1)
             else:
                 boot_image = None
+
         return dict(sys=boot_image)
 
     def install_os(self, image_name, **vendor_specifics):
